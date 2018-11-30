@@ -49,9 +49,9 @@ def get_youtube_file(url, media_type="audio"):
         f.write(content)
 
     end_time = time.perf_counter()
-    total_time = end_time - start_time
+    total_time = int(end_time - start_time)
 
-    print("DOWNLOADING '%s' COMPLETE IN %s" % (filename, total_time))
+    print("DOWNLOADING '%s' COMPLETE IN %s seconds" % (filename, total_time))
 
 
 if __name__ == "__main__":
