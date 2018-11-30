@@ -1,4 +1,4 @@
-# Doutube Downloader
+# Youtube Downloader
 
 Simple Youtube Video and Audio downloader script written in Python
 
