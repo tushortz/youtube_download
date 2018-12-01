@@ -45,26 +45,27 @@ def get_youtube_file(url, media_type="audio"):
                 break
 
     filename = "%s.%s" % (title, file_ext)
-    with open(filename, "wb") as f:
-        r = requests.get(file_url, stream=True)
-        total_length = int(r.headers.get('content-length'))
-        chunks = r.iter_content(chunk_size=1024)
 
-        with click.progressbar(chunks, length=int(total_length/1024) + 1, label="Downloading %s" % filename, show_percent=True, show_pos=True, show_eta=True, width=50, color="green") as chunks:
-            for chunk in chunks:
-                if chunk:
-                    f.write(chunk)
-                    f.flush()
+    r = requests.get(file_url, stream=True)
+    total_length = int(r.headers.get('content-length'))
+    chunks = r.iter_content(chunk_size=1024)
+
+    with click.progressbar(chunks, length=int(total_length/1024), label="Downloading %s" % filename, show_percent=True, show_pos=True, show_eta=True, width=50, color="green") as bar, open(filename, "wb") as f:
+        for chunk in bar:
+            f.write(chunk)
+            f.flush()
+
+            bar.update(int(len(chunk)/1024))
 
     end_time = time.perf_counter()
     total_time = int(end_time - start_time)
 
-    print("DOWNLOADING '%s' COMPLETE IN %s seconds" % (filename, total_time))
+    print("DOWNLOAD COMPLETE IN %s seconds" % (total_time))
 
 
 if __name__ == "__main__":
     # ------------------CAN EDIT --------------------------------------------
-    VIDEO_URL = "https://www.youtube.com/watch?v=pIf6j-WeyFw"
+    VIDEO_URL = "https://www.youtube.com/watch?v=d95PPykB2vE"
     MEDIA_TYPE = "audio"
     # -----------------------------------------------------------------------
 
