@@ -4,6 +4,7 @@ from urllib import parse
 import json
 import html
 import time
+import click
 
 
 def get_youtube_file(url, media_type="audio"):
@@ -45,8 +46,15 @@ def get_youtube_file(url, media_type="audio"):
 
     filename = "%s.%s" % (title, file_ext)
     with open(filename, "wb") as f:
-        content = requests.get(file_url).content
-        f.write(content)
+        r = requests.get(file_url, stream=True)
+        total_length = int(r.headers.get('content-length'))
+        chunks = r.iter_content(chunk_size=1024)
+
+        with click.progressbar(chunks, length=int(total_length/1024) + 1, label="Downloading %s" % filename, show_percent=True, show_pos=True, show_eta=True, width=50, color="green") as chunks:
+            for chunk in chunks:
+                if chunk:
+                    f.write(chunk)
+                    f.flush()
 
     end_time = time.perf_counter()
     total_time = int(end_time - start_time)
@@ -56,7 +64,7 @@ def get_youtube_file(url, media_type="audio"):
 
 if __name__ == "__main__":
     # ------------------CAN EDIT --------------------------------------------
-    VIDEO_URL = "https://www.youtube.com/watch?v=87GgSO5B5Hc&feature=youtu.be"
+    VIDEO_URL = "https://www.youtube.com/watch?v=pIf6j-WeyFw"
     MEDIA_TYPE = "audio"
     # -----------------------------------------------------------------------
 
