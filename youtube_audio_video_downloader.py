@@ -50,25 +50,35 @@ def get_youtube_file(url, media_type="audio"):
     total_length = int(r.headers.get('content-length'))
     chunks = r.iter_content(chunk_size=1024)
 
-    with click.progressbar(chunks, length=int(total_length/1024), label="Downloading %s" % filename, show_percent=True, show_pos=True, show_eta=True, width=50, color="green") as bar, open(filename, "wb") as f:
+    with click.progressbar(chunks, length=int(total_length/1024) + 1, label="Downloading %s" % filename, show_percent=True, show_pos=True, show_eta=True, width=50, color="green") as bar, open(filename, "wb") as f:
         for chunk in bar:
             f.write(chunk)
             f.flush()
 
-            bar.update(int(len(chunk)/1024))
+            bar.update(int(len(chunk)/2048))
 
     end_time = time.perf_counter()
     total_time = int(end_time - start_time)
 
-    print("DOWNLOAD COMPLETE IN %s seconds" % (total_time))
+    print("'%s' download complete in %s seconds" % (filename, total_time))
 
 
 if __name__ == "__main__":
     # ------------------CAN EDIT --------------------------------------------
-    VIDEO_URL = "https://www.youtube.com/watch?v=d95PPykB2vE"
     MEDIA_TYPE = "audio"
-    # -----------------------------------------------------------------------
+    VIDEO_URLS = [
+        "https://www.youtube.com/watch?v=yYw_JBNO1Kg",
+        "https://www.youtube.com/watch?v=brQT6X5xG7k",
+        "https://www.youtube.com/watch?v=C-be3I6RulQ",
+        "https://www.youtube.com/watch?v=BBqFvQijM1k",
+        "https://www.youtube.com/watch?v=OhHyHnAG_I8",
+        "https://www.youtube.com/watch?v=FVbEe_a_-rM",
+        "https://www.youtube.com/watch?v=4G5BAQhLzMw",
+        "https://www.youtube.com/watch?v=OwrE0YjfNGg",
+        "https://www.youtube.com/watch?v=8R4bM54Cp7I"
+    ]
 
     # ---------------DO NOT EDIT ----------------------------
-    get_youtube_file(VIDEO_URL, MEDIA_TYPE)
+    for VIDEO_URL in VIDEO_URLS:
+        get_youtube_file(VIDEO_URL, MEDIA_TYPE)
     # --------------------------------------------------------
