@@ -5,6 +5,7 @@ import json
 import html
 import time
 import click
+import ast
 
 
 def get_youtube_file(url, media_type="audio"):
@@ -27,26 +28,25 @@ def get_youtube_file(url, media_type="audio"):
         quit("Error: Invalid media type detected")
 
     source = requests.get(url).text
-    source = source.replace("\\", "").replace("u0026", "&")
+    source = source.replace("\\u0026", "&").replace("\\", "")
     source = parse.unquote_plus(source)
 
     title = re.search(r'"title":"(.*?)"',
                       source).group(1).replace("\\", "").replace("?", "-")
-    results = re.findall(r'"url":"(.*?)","mimeType":"(.*?);', source)
+    results = re.findall(r'"url":"(.*?)","mimeType":"(.*?); ', source)
 
-    results = [{"url": i[0], "type": i[1]} for i in results]
-
-    file_url = ""
     for i in results:
-        if i.get("type").lower().startswith(media_type) and i.get("url"):
-            file_url = i.get("url")
+        file_url, mime = i
 
-            if i.get("type").endswith("mp4"):
+        if mime.lower().startswith(media_type) and file_url:
+
+            if mime.endswith("mp4"):
                 break
 
     filename = "%s.%s" % (title, file_ext)
-
+    filename = filename.replace("/", "-")
     r = requests.get(file_url, stream=True)
+
     total_length = int(r.headers.get('content-length'))
     chunks = r.iter_content(chunk_size=1024)
 
@@ -67,16 +67,10 @@ if __name__ == "__main__":
     # ------------------CAN EDIT --------------------------------------------
     MEDIA_TYPE = "audio"
     VIDEO_URLS = [
-        "https://www.youtube.com/watch?v=yYw_JBNO1Kg",
-        "https://www.youtube.com/watch?v=brQT6X5xG7k",
-        "https://www.youtube.com/watch?v=C-be3I6RulQ",
-        "https://www.youtube.com/watch?v=BBqFvQijM1k",
-        "https://www.youtube.com/watch?v=OhHyHnAG_I8",
-        "https://www.youtube.com/watch?v=FVbEe_a_-rM",
-        "https://www.youtube.com/watch?v=4G5BAQhLzMw",
-        "https://www.youtube.com/watch?v=OwrE0YjfNGg",
-        "https://www.youtube.com/watch?v=8R4bM54Cp7I"
+        "https://www.youtube.com/watch?v=sdqDUURY5H0&feature=youtu.be"
     ]
+
+    # -----------------------------------------------------------------------
 
     # ---------------DO NOT EDIT ----------------------------
     for VIDEO_URL in VIDEO_URLS:
