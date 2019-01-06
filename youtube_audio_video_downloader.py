@@ -6,6 +6,7 @@ import html
 import time
 import click
 import ast
+import sys
 
 
 def get_youtube_file(url, media_type="audio"):
@@ -64,14 +65,30 @@ def get_youtube_file(url, media_type="audio"):
 
 
 if __name__ == "__main__":
-    # ------------------CAN EDIT --------------------------------------------
+    args = sys.argv
     MEDIA_TYPE = "audio"
-    VIDEO_URLS = [
-        "https://www.youtube.com/watch?v=sdqDUURY5H0&feature=youtu.be"
-    ]
 
-    # -----------------------------------------------------------------------
+    if len(args) == 2:
+        VIDEO_URLS = list(filter(lambda x: x.startswith("http"), args[1].split(" ")))
+    
+    elif len(args) > 2:
+        MEDIA_TYPE = args[1]
+        VIDEO_URLS = list(filter(lambda x: x.startswith("http"), args))
+    else:
+        sys.exit("""
+HOW TO USE
+==========
 
+python youtube_audio_video_downloader.py "<links in quotes separated by spaces>"
+
+or
+
+python youtube_audio_video_downloader.py <media type> <links separated by spaces>
+
+-----------------------------------------------------------
+media type can be "audio" or "video". Default is audio
+
+""")
     # ---------------DO NOT EDIT ----------------------------
     for VIDEO_URL in VIDEO_URLS:
         get_youtube_file(VIDEO_URL, MEDIA_TYPE)
