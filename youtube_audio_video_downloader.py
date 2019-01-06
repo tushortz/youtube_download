@@ -5,7 +5,6 @@ import json
 import html
 import time
 import click
-import ast
 import sys
 
 
