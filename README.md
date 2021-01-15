@@ -26,13 +26,12 @@ Alternatively to specify `media download type, use:
 ```bash
 $ python youtube_download.py [MEDIA_TYPE] [urls in quotes separated by spaces]
 ```
-
+break a change
 For example:
 
 ```bash
-$ python youtube_download.py audio https://www.youtube.com/watch?v=QImrM_rbF6o https://www.youtube.com/watch?v=fiyYoe678yI
-```
-
-> When specifying the media type as in the second example, you don't need to enclose the video urls in quotes.
+$ pytthe media type as in the second example, you don't need to enclose the video urls in quotes.
 
 > Valid `MEDIA_TYPES` are `audio` and `video`
+
+break a change
